@@ -3,6 +3,7 @@ package org.taerock.boot03.config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -47,7 +48,7 @@ public class CustomSecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/member/**", "board/list").permitAll()
+                        .requestMatchers("/member/**", "/board/list","/view/**").permitAll()
                         .requestMatchers("/board/register").hasRole("USER")
                         .anyRequest().authenticated()
                 )
@@ -65,9 +66,10 @@ public class CustomSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         log.info("------------web configure-------------------");
-        return  (web) -> web
+        return (web) -> web
                 .debug(webSecurityDebug)
-                .ignoring().requestMatchers("/board/list", "/js/**", "/css/**");
+                .ignoring()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     //jdbc 관련 설정

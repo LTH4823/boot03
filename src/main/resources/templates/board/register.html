@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic.html}">
 
@@ -29,8 +29,8 @@
 
             <div class="input-group mb-3">
               <span class="input-group-text">Writer</span>
-              <input type="text" name="writer" class="form-control" placeholder="Writer">
-
+              <input type="text" name="writer" class="form-control" placeholder="Writer"
+                     th:value="${#authentication.principal.username}" readonly>
             </div>
 
             <div class="input-group mb-3">
@@ -84,17 +84,6 @@
     </div>
   </div><!-- register modal -->
 
-  <form class="form-inline my-2 my-lg-0" form-method="post" th:action="@{/logout}">
-    <button sec:authorize="isAuthenticated()" class="btn btn-outline-danger my-2 my-sm-0 btn-sm" type="submit">Logout</button>
-    <button sec:authorize="isAnonymous()" th:href="@{/member/login}" class="btn btn-outline-info my-2 my-sm-0 btn-sm" type="submit">Login</button>
-  </form>
-  <div sec:authorize="hasRole('ROLE_ADMIN')">
-    This content is only shown to administrators.
-  </div>
-  <div sec:authorize="hasRole('ROLE_USER')">
-    This content is only shown to users.
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   <script src="/js/upload.js"></script>
@@ -103,6 +92,8 @@
 
 
 <script layout:fragment="script" th:inline="javascript">
+
+  const auth = [[${#authentication.principal}]]
 
   const errors = [[${errors}]]
   console.log(errors)
@@ -215,6 +206,4 @@
 
   }, false)
 
-  const auth = [[${#authentication}]]
-  const user = [[${user}]]
 </script>

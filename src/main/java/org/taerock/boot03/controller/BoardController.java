@@ -75,18 +75,7 @@ public class BoardController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/register")
-    public void registerGET(Model model, @AuthenticationPrincipal User user){
-        log.info("=================================");
-        log.info("=================================");
-        log.info(user);
-        log.info("=================================");
-        log.info("=================================");
-        model.addAttribute("user", user);
-        if (user == null) {
-            model.addAttribute("message", "Spring security");
-        } else {
-            model.addAttribute("message", "Hello, " + user.getUsername());
-        }
+    public void registerGET(){
     }
 
     @PostMapping("/register")
@@ -121,7 +110,7 @@ public class BoardController {
 //
 //    }
 
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
 
