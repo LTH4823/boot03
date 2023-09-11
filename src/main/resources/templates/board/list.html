@@ -71,8 +71,10 @@
                     </table>
 
                     <div class="float-end">
+                        <a th:href="@{/board/register}" class="text-decoration-none">
+                            <button type="button" class="btn btn-secondary">register</button>
+                        </a>
                         <ul class="pagination flex-wrap">
-
                             <li class="page-item" th:if="${responseDTO.prev}">
                                 <a class="page-link" th:data-num="${responseDTO.start -1}">Previous</a>
                             </li>

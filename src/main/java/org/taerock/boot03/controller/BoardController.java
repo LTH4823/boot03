@@ -122,6 +122,8 @@ public class BoardController {
 
     }
 
+    // 로그인한 사용자의 정보와 들어가는 데이터의 작성자 정보가 일치 하면 실행
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/modify")
     public String modify( @Valid BoardDTO boardDTO,
                           BindingResult bindingResult,
