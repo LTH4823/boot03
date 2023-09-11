@@ -168,8 +168,9 @@ public class BoardController {
 //    }
 
 
+    @PreAuthorize("principal.username == #writer")
     @PostMapping("/remove")
-    public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes) {
+    public String remove(BoardDTO boardDTO, String writer, RedirectAttributes redirectAttributes) {
 
         Long bno  = boardDTO.getBno();
         log.info("remove post.. " + bno);

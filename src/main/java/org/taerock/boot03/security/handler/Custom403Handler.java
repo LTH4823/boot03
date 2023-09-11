@@ -23,6 +23,11 @@ public class Custom403Handler implements AccessDeniedHandler {
 
         response.setStatus(HttpStatus.FORBIDDEN.value());
 
+        log.info("------METHOD--------");
+        log.info(request.getMethod());
+
+        log.info(request.getContentType());
+
         //JSON 요청이었는지 확인
         String contentType = request.getHeader("Content-Type");
 

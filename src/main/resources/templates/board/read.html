@@ -231,7 +231,7 @@
             alert(result.rno)
             registerModal.hide()
             replyText.value = ''
-            replyer.value =''
+            // replyer.value =''
             printReplies(1,10, true) //댓글 목록 갱신
         }).catch(e => {
             alert("Exception...")
@@ -339,12 +339,14 @@
 
         // 본인 아닐 시 모달 처리
         if(!hasAuth){
-            alert("댓글 작성자만 수정이 가능합니다.")
+            alert("댓글 작성자만 삭제가 가능합니다.")
             modifyModal.hide();
             return
         }
 
-        removeReply(replyHeader.innerHTML).then(result => {
+        const data = {rno:parseInt(replyHeader.innerHTML), replyer: currentUser}
+
+        removeReply(data).then(result => {
 
             alert(result.rno +' 댓글이 삭제되었습니다.')
             replyText.value = ''

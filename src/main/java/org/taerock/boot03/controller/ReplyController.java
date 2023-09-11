@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 
 import org.springframework.http.MediaType;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -90,10 +91,15 @@ public class ReplyController {
     }
 
     @Operation(summary = "Delete Reply", description = "DELETE 방식으로 특정 댓글 삭제")
-    @DeleteMapping("/{rno}")
-    public Map<String,Long> remove( @PathVariable("rno") Long rno ){
+    @PreAuthorize("principal.username == #replyDTO.replyer")
+    @DeleteMapping(value = "/{rno}", consumes = MediaType.APPLICATION_JSON_VALUE )
+    public Map<String,Long> remove( @PathVariable("rno") Long rno, @RequestBody ReplyDTO replyDTO){
 
         replyService.remove(rno);
+
+        log.info("===============reply remove=================");
+        log.info("===============reply "+ rno);
+        log.info(replyDTO);
 
         Map<String, Long> resultMap = new HashMap<>();
 
@@ -106,7 +112,7 @@ public class ReplyController {
 
     @Operation(summary = "Modify Reply", description = "PUT 방식으로 특정 댓글 수정")
     @PutMapping(value = "/{rno}", consumes = MediaType.APPLICATION_JSON_VALUE )
-    public Map<String,Long> remove( @PathVariable("rno") Long rno, @RequestBody ReplyDTO replyDTO ){
+    public Map<String,Long> modify( @PathVariable("rno") Long rno, @RequestBody ReplyDTO replyDTO ){
 
         replyDTO.setRno(rno); //번호를 일치시킴
 
