@@ -13,9 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.taerock.boot03.security.CustomUserDetailsService;
+import org.taerock.boot03.security.handler.Custom403Handler;
 
 import javax.sql.DataSource;
 
@@ -52,6 +54,7 @@ public class CustomSecurityConfig {
                         .requestMatchers("/board/register").hasRole("USER")
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(exc->exc.accessDeniedHandler(accessDeniedHandler()))
                 .formLogin((form) -> form.loginPage("/member/login"))
                 .csrf((csrf) -> csrf.disable())
                 .rememberMe((remember) -> remember
@@ -78,6 +81,11 @@ public class CustomSecurityConfig {
         JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
         repo.setDataSource(dataSource);
         return repo;
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new Custom403Handler();
     }
 
 }
