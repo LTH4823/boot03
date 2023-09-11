@@ -97,9 +97,9 @@
                         <span class="input-group-text">Reply Text</span>
                         <input type="text" class="form-control replyText" >
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3"  th:with="user = ${#authentication.principal}">
                         <span class="input-group-text">Replyer</span>
-                        <input type="text" class="form-control replyer" >
+                        <input type="text" class="form-control replyer" th:value="${user.username}" readonly>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -121,7 +121,7 @@
                 <div class="modal-body">
                     <div class="input-group mb-3">
                         <span class="input-group-text">Reply Text</span>
-                        <input type="text" class="form-control modifyText" >
+                        <input type="text" class="form-control modifyText">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -143,6 +143,8 @@
 
 
 <script layout:fragment="script" th:inline="javascript">
+
+    const currentUser = [[${#authentication.principal.username}]]
 
     const bno = [[${dto.bno}]]
 
@@ -268,6 +270,7 @@
     const removeBtn = document.querySelector(".removeBtn")
     const closeModifyBtn = document.querySelector(".closeModifyBtn")
 
+    let hasAuth = false
 
     replyList.addEventListener("click", function (e){
 
@@ -291,6 +294,9 @@
             console.log(reply)
             replyHeader.innerHTML = reply.rno
             modifyText.value = reply.replyText
+
+            hasAuth = currentUser ===reply.replyer //댓글 작성자와 현재 사용자 일치 여부 확인
+
             modifyModal.show()
 
         }).catch(e => alert('error'))
@@ -299,6 +305,13 @@
 
 
     modifyBtn.addEventListener("click", function(e) {
+
+        // 본인 아닐 시 모달 처리
+        if(!hasAuth){
+            alert("댓글 작성자만 수정이 가능합니다.")
+            modifyModal.hide();
+            return
+        }
 
         const replyObj = {
             bno:bno,
@@ -323,6 +336,13 @@
     }, false)
 
     removeBtn.addEventListener("click", function(e) {
+
+        // 본인 아닐 시 모달 처리
+        if(!hasAuth){
+            alert("댓글 작성자만 수정이 가능합니다.")
+            modifyModal.hide();
+            return
+        }
 
         removeReply(replyHeader.innerHTML).then(result => {
 
