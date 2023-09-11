@@ -46,6 +46,11 @@ public class CustomSecurityConfig {
         log.info("======================================");
 
         http
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/member/**", "board/list").permitAll()
+                        .requestMatchers("/board/register").hasRole("USER")
+                        .anyRequest().authenticated()
+                )
                 .formLogin((form) -> form.loginPage("/member/login"))
                 .csrf((csrf) -> csrf.disable())
                 .rememberMe((remember) -> remember
