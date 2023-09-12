@@ -63,8 +63,7 @@ public class CustomSecurityConfig {
                         .tokenRepository(persistentTokenRepository())
                         .userDetailsService(customUserDetailsService)
                         .tokenValiditySeconds(60*60*24*30)
-                );
-//                .oauth2Login(Customizer.withDefaults());
+                ).oauth2Login(Customizer.withDefaults());
         return http.build();
     }
 
