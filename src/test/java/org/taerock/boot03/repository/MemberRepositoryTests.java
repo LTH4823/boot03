@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.taerock.boot03.domain.Member;
 import org.taerock.boot03.domain.MemberRole;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -20,6 +21,14 @@ public class MemberRepositoryTests {
 
     @Autowired
     private MemberRepository memberRepository;
+
+
+    @Test
+    public void selectMember(){
+        String id="member90";
+        Optional<Member> result = memberRepository.getWithRoles(id);
+        log.info(result.get());
+    }
 
     @Test
     public void insertMembers(){
