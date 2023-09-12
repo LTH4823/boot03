@@ -8,12 +8,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.taerock.boot03.dto.MemberJoinDTO;
+import org.taerock.boot03.service.MemberService;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/member")
 @Log4j2
 public class MemberController {
+
+    private final MemberService memberService;
 
     @GetMapping("/login")
     public void loginGET(String error, String logout){
@@ -34,7 +37,17 @@ public class MemberController {
         log.info("join post...");
         log.info(memberJoinDTO);
 
-        return "redirect:/member/login";
+        try {
+            memberService.join(memberJoinDTO);
+        } catch (MemberService.MidExistException e) {
+
+            redirectAttributes.addFlashAttribute("error", "mid");
+            return "redirect:/member/join";
+        }
+
+        redirectAttributes.addFlashAttribute("result", "success");
+
+        return "redirect:/member/login"; // 회원 가입 후 로그인
     }
 
 }
