@@ -51,19 +51,21 @@ public class CustomSecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/member/**", "/board/list","/view/**").permitAll()
+                        .requestMatchers("/member/**", "/board/list", "/view/**").permitAll()
                         .requestMatchers("/board/register").hasRole("USER")
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exc->exc.accessDeniedHandler(accessDeniedHandler()))
+                .exceptionHandling(exc -> exc.accessDeniedHandler(accessDeniedHandler()))
                 .formLogin((form) -> form.loginPage("/member/login"))
                 .csrf((csrf) -> csrf.disable())
                 .rememberMe((remember) -> remember
                         .key("12345678")
                         .tokenRepository(persistentTokenRepository())
                         .userDetailsService(customUserDetailsService)
-                        .tokenValiditySeconds(60*60*24*30)
-                ).oauth2Login(Customizer.withDefaults());
+                        .tokenValiditySeconds(60 * 60 * 24 * 30)
+
+                );
+        http.oauth2Login(Customizer.withDefaults());
         return http.build();
     }
 
@@ -78,14 +80,14 @@ public class CustomSecurityConfig {
 
     //jdbc 관련 설정
     @Bean
-    public PersistentTokenRepository persistentTokenRepository(){
+    public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
         repo.setDataSource(dataSource);
         return repo;
     }
 
     @Bean
-    public AccessDeniedHandler accessDeniedHandler(){
+    public AccessDeniedHandler accessDeniedHandler() {
         return new Custom403Handler();
     }
 
