@@ -17,4 +17,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select count(m.mid) from Member m where m.mid = :mid")
     long checkCountId(String mid);
 
+    Optional<Member> findByEmail(String email);
+
 }
