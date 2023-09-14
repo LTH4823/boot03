@@ -15,10 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.taerock.boot03.security.CustomUserDetailsService;
 import org.taerock.boot03.security.handler.Custom403Handler;
+import org.taerock.boot03.security.handler.CustomSocialLoginSuccessHandler;
 
 import javax.sql.DataSource;
 
@@ -40,6 +42,12 @@ public class CustomSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // handler bean 추가
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new CustomSocialLoginSuccessHandler(passwordEncoder());
+    }
+
     // 모든 요청에 대한 처리 필터
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
@@ -56,7 +64,8 @@ public class CustomSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exc -> exc.accessDeniedHandler(accessDeniedHandler()))
-                .formLogin((form) -> form.loginPage("/member/login"))
+                .formLogin((form) -> form.loginPage("/member/login").successHandler(authenticationSuccessHandler()))
+                .oauth2Login(oath -> oath.successHandler(authenticationSuccessHandler()))
                 .csrf((csrf) -> csrf.disable())
                 .rememberMe((remember) -> remember
                         .key("12345678")
@@ -65,7 +74,6 @@ public class CustomSecurityConfig {
                         .tokenValiditySeconds(60 * 60 * 24 * 30)
 
                 );
-        http.oauth2Login(Customizer.withDefaults());
         return http.build();
     }
 
