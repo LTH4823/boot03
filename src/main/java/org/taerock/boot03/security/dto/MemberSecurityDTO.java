@@ -1,12 +1,15 @@
 package org.taerock.boot03.security.dto;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
-public class MemberSecurityDTO extends User {
+public class MemberSecurityDTO extends User implements OAuth2User {
 
     private String mid;
     private String mpw;
@@ -15,6 +18,15 @@ public class MemberSecurityDTO extends User {
     private boolean social;
 
     private Map<String, Object> props; //소셜 로그인 정보
+
+    public MemberSecurityDTO(String email, String mpw,  Map<String, Object>props){
+
+        super(email, mpw, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
+        this.mid = email;
+        this.mpw = mpw;
+        this.props = props;
+    }
 
     public MemberSecurityDTO(String username, String password, String email, boolean del, boolean social,
                              Collection<? extends GrantedAuthority> authorities) {
@@ -28,4 +40,13 @@ public class MemberSecurityDTO extends User {
 
     }
 
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.props;
+    }
+
+    @Override
+    public String getName() {
+        return this.mid;
+    }
 }

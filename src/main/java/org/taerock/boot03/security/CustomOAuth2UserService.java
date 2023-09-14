@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.taerock.boot03.security.dto.MemberSecurityDTO;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -63,7 +64,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         log.info("===============================");
 
 
-        return super.loadUser(userRequest);
+        //return super.loadUser(userRequest);
+        return new MemberSecurityDTO(email, "1111", paramMap);
     }
 
     private String getKakaoEmail(Map<String, Object> paramMap){
