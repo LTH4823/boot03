@@ -22,39 +22,6 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi getBoardApi() {
-
-        return GroupedOpenApi
-                .builder()
-                .group("board")
-                .pathsToMatch("/board/**")
-                .build();
-
-    }
-
-    @Bean
-    public GroupedOpenApi getUploadApi() {
-
-        return GroupedOpenApi
-                .builder()
-                .group("upload")
-                .pathsToMatch("/upload/**", "/view/**", "/remove/**")
-                .build();
-
-    }
-
-    @Bean
-    public GroupedOpenApi getReplyApi() {
-
-        return GroupedOpenApi
-                .builder()
-                .group("reply")
-                .pathsToMatch("/replies/**")
-                .build();
-
-    }
-
-    @Bean
     public GroupedOpenApi getMemberApi() {
 
         return GroupedOpenApi
